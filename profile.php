@@ -2,44 +2,24 @@
 <head>
 
 
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>ICOT Sign Up</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
-
-        <link rel="stylesheet" href="css/bootstrap.min.css">
-        <style>
-			.error {color: #FF0000;}
-            body {
-                padding-bottom: 20px;
-				padding-top: 35px;
-            }
-			
-		</style>
-		
-        <link rel="stylesheet" href="css/bootstrap-theme.min.css">
-        <link rel="stylesheet" href="css/main.css">
-
-        <script src="js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
-		
     </head>
 	<title> <?php echo $firstname ; ?> <?php echo $lastname ; ?>s Profile  </title>
 </head>
 
 
 <?php
+require 'connection.php';
 // check for form submission
 
 //if (isset($_GET['username'])){
 	//$username = $_GET['username'];
-	$username = 'user1';
-	$userquery = mysql_query("SELECT * FROM memberInfo WHERE username ='$username' ") or die("The query could not be completed. Please try again later");
-	if (mysql_num_rows($userquery) != 1){
+	$username = 'user';
+	$userquery = mysqli_query($con, "SELECT * FROM memberInfo WHERE username ='$username' ") or die("The query could not be completed. Please try again later".mysqli_error($con));
+	if (mysqli_num_rows($userquery) != 1){
 		die("That username could not be found");
 	}
-	while ($row = mysql_fetch_array($userquery, MYSQL_ASSOC)){
-		$id = $row['memberid'];
+	while ($row = mysqli_fetch_array($userquery, MYSQL_ASSOC)){
+		$id = $row['id'];
 		$firstname = $row['firstname'];
 		$lastname = $row['lastname'];
 		$email = $row['email'];
@@ -49,7 +29,7 @@
 
 	}
 
-  if(username != $dbusername){
+  if($username != $dbusername){
 
     die ("There has been a fatal error");
 
@@ -59,17 +39,18 @@
 ?>
 <?php
 //}
+$empty = '';
 
 if(isset($_POST['delete1'])){
-$sql = "UPDATE memberInfo SET address = ''  WHERE memberid= '$_POST[hidden]'";
-		$res = mysql_query($sql) 
-                                    or die("Could not remove address".mysql_error());
+	echo "button2 pressed";
+	$sql = "UPDATE memberInfo SET `address` = '$empty'  WHERE id= $_POST[hidden] ";
+	$res = mysqli_query($con,$sql) or die("Could not remove address".mysqli_error($con));
 		echo "<meta http-equiv='refresh' content='0;url=profile.php'>";
 };
 if(isset($_POST['delete'])){
-$sql = "UPDATE memberInfo SET phone = ''  WHERE memberid= '$_POST[hidden]'";
-		$res = mysql_query($sql) 
-                                    or die("Could not remove phone number".mysql_error());
+	echo "button1 pressed";
+	$sql = "UPDATE memberInfo SET `phone` = '$empty'  WHERE id= $_POST[hidden] ";
+		$res = mysqli_query($con,$sql) or die("Could not remove phone number".mysqli_error($con));
 		echo "<meta http-equiv='refresh' content='0;url=profile.php'>";
 };
 
@@ -85,19 +66,23 @@ $sql = "UPDATE memberInfo SET phone = ''  WHERE memberid= '$_POST[hidden]'";
 
    <tr><td>Email:</td><td><?php echo $email; ?></td></tr><br />
 
-   <tr><td>Phone Number:</td><td><?php echo $phone;echo "<td>" . "<input type='submit' name='delete' value='remove' onclick ='form.action ='profile.php'; return true;'' > " . " </td>" ?><br/></td></tr><br />
+   <tr><td>Phone Number:</td><td><?php echo $phone;echo "<td>" . "<input type='submit' name='delete' value='remove'> " . " </td>" ?><br/></td></tr><br />
 
-   <tr><td>Address:</td><td><?php echo $address; echo "<td>" . "<input type= 'submit' name='delete1' value='remove' onclick ='this.form.target= '_blank'; return true; ''>  " . " </td>";?><br/></td></tr><br />
+   <tr><td>Address:</td><td><?php echo $address; echo "<td>" . "<input type= 'submit' name='delete1' value='remove'>  " . " </td>" ?><br/></td></tr><br />
 
 
-   <tr><td></td><td><input type="hidden" name="hidden" value="$id"></br>
+   <tr><td></td><td><input type="hidden" name="hidden" value=" <?php echo $id ; ?>"></br>
+
 
    
 
 </table>
 
+</form>
+<form name='form' method='post' action= 'edit.php' >
+<tr><td></td><td><input type="hidden" name="hidden" value=" <?php echo $id ; ?>"></br>
 
-<input type="submit" name="update" value="Edit My User Profile" onclick = form.action = 'edit.php'; return true; >
+<input type="submit" name="update" value="Edit My User Profile"  >
 </form>
 </body>
 
