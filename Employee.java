@@ -21,7 +21,7 @@ public class Employee {
 	JButton b5 = new JButton("Logout");
 
 	//Login constructor
-	public Member(){
+	public Employee(){
 		connect();
 		frame();
 		
