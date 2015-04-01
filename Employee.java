@@ -407,10 +407,7 @@ public class Employee{
            } 
         });
         
-        frame.setSize(600,400);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.add(window);
-	frame.setVisible(true);
+        createFrame(window, frame);
     }
     
     
@@ -425,8 +422,8 @@ public class Employee{
     
     private void addEmployee() {
         final JFrame frame = new JFrame("RAW Add Employee");//adding a frame
-	JLabel lUser = new JLabel("Username:");
-	JLabel lPassword = new JLabel("Password:");
+        JLabel lUser = new JLabel("Username:");
+        JLabel lPassword = new JLabel("Password:");
 	
         JTextField tUser = new JTextField(20);
         JPasswordField tPassword = new JPasswordField(20);
@@ -507,6 +504,90 @@ public class Employee{
                frame.dispose();
            } 
         });
+        
+        saveBtn.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+
+                String Username = tUser.getText().trim();
+                String FirstName = tFirstName.getText().trim();
+                @SuppressWarnings("deprecation")
+                String Password = tPassword.getText().trim();
+                String Email = tEmail.getText().trim();
+                String LastName = tLastName.getText().trim();
+                String PhoneNumber = tPhoneNumber.getText().trim();
+                String DPNumber = tDPNumber.getText().trim();
+                
+                Connection con = DatabaseConnection.getConnection()
+				
+				
+				
+				try{
+			
+					//creating an sql query
+					String sql = "select username from employee where username = '"+Username+"'";
+					Statement st = con.createStatement();
+	 	            ResultSet rs = st.executeQuery(sql);
+	 	            
+					int count = 0;
+					
+					while(rs.next()){
+						count = count + 1;
+					}//end while
+					
+					//checks if username already in use
+					if(count == 1){
+						JOptionPane.showMessageDialog(null, "Username already in use. Try Again");
+			
+					}
+					
+					
+					
+					//creating an sql query
+					 sql = "select email from employee where username = '"+Email+"'";
+					
+					rs = st.executeQuery(sql);
+					
+					 count = 0;
+					
+					while(rs.next()){
+						count = count + 1;
+					}//end while
+					
+					//checks if email already in use
+					if(count == 1){
+						JOptionPane.showMessageDialog(null, "Email already in use. Try Again");
+			
+					
+				}//end try
+				}
+								
+				catch(Exception ex){
+					
+				}//end catch
+				
+				
+				try{
+				// add new employee to database
+				String sql = "INSERT INTO employee (firstname, lastname)" +
+				        "VALUES (?, ?)";
+				
+		
+				
+				PreparedStatement preparedStatement = con.prepareStatement(sql);
+				preparedStatement.setString(1, FirstName);
+				preparedStatement.setString(2, LastName);
+				preparedStatement.executeUpdate(); 
+				
+				
+				
+				}
+				catch(Exception ex){
+					
+					}//end catch
+				
+				
+			}
+		});//end b action
         
         createFrame( window, frame);
     }
