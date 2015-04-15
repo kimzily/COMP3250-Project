@@ -339,8 +339,6 @@ public class Employee{
     
     
     
-    
-    
     private void removeEmployee() {
         final JFrame frame = new JFrame("RAW Remove Employee");//adding a frame
 	
@@ -348,7 +346,7 @@ public class Employee{
         final JTextField tUser = new JTextField(20);
         
         JButton saveBtn = new JButton("Save");
-	JButton exitBtn = new JButton("Exit");
+        JButton exitBtn = new JButton("Exit");
         
         JPanel window = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -390,7 +388,8 @@ public class Employee{
 					sql = "delete from employee where username='" + username + "'";
 		               try {
 		                   st = con.createStatement();
-		                   st.executeQuery(sql);
+		                   st.executeUpdate(sql);
+		                   JOptionPane.showMessageDialog(null, "Employee Successfully Deleted");
 		               } catch (Exception ex) {
 		                   ex.printStackTrace();
 		               }               
@@ -517,7 +516,7 @@ public class Employee{
                 String PhoneNumber = tPhoneNumber.getText().trim();
                 String DPNumber = tDPNumber.getText().trim();
                 
-                Connection con = DatabaseConnection.getConnection()
+                Connection con = DatabaseConnection.getConnection();
 				
 				
 				
